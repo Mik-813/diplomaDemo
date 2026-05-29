@@ -1,0 +1,24 @@
+name: Lint (PR)
+
+on:
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  eslint:
+    name: ESLint check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint (fail on warnings)
+        run: npx eslint . --max-warnings=0

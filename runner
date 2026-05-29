@@ -1,0 +1,53 @@
+#!/bin/sh
+
+set -e
+
+PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+help() {
+  printf "Runner options:\n"
+  printf "dev\t- (re)initialize development environment\n"
+  printf "prod\t- (re)initialize production environment\n"
+  printf "stop\t- shut down an environment\n"
+  printf "destroy\t- remove environment\n"
+  printf "help\t\t- show this message\n"
+}
+
+copy_env() {
+  for dir in caddy-reverse-proxy fitness-web fitness-api/project fitness-api/dependencies; do
+    cp .env "$dir/"
+  done
+}
+
+stop() {
+  (cd caddy-reverse-proxy && ./runner stop)
+  (cd fitness-web && ./runner stop)
+  (cd fitness-api/dependencies && docker compose down)
+}
+
+destroy() {
+  (cd caddy-reverse-proxy && ./runner destroy)
+  (cd fitness-web && ./runner destroy)
+  (cd fitness-api/dependencies && docker compose down)
+}
+
+dev() {
+  stop
+
+  cp .env.dev .env
+  copy_env
+
+  (cd caddy-reverse-proxy && ./runner dev)
+  (cd fitness-web && ./runner dev)
+  (cd fitness-api && ./run)
+}
+
+case "$1" in
+  (dev) dev;;
+  (prod) prod;;
+  (stop) stop;;
+  (destroy) destroy;;
+  (*) help;;
+esac
+
+exit 0

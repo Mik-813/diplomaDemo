@@ -1,0 +1,48 @@
+#!/bin/sh
+
+set -e
+
+help() {
+  printf "Runner options:\n"
+  printf "dev\t- (re)initialize development environment\n"
+  printf "prod\t- (re)initialize production environment\n"
+  printf "stop\t- shut down an environment\n"
+  printf "destroy\t- remove environment and associated volumes\n"
+  printf "logs\t- view container logs\n"
+  printf "help\t- show this message\n"
+}
+
+stop() {
+  docker compose down
+}
+
+destroy() {
+  docker compose down -v
+}
+
+logs() {
+  docker compose logs -f
+}
+
+dev() {
+  stop
+  cp Caddyfile.dev Caddyfile
+  docker compose up -d --build --remove-orphans
+}
+
+prod() {
+  stop
+  cp Caddyfile.prod Caddyfile
+  docker compose up -d --build --remove-orphans
+}
+
+case "$1" in
+  (dev) dev;;
+  (prod) prod;;
+  (stop) stop;;
+  (destroy) destroy;;
+  (logs) logs;;
+  (*) help;;
+esac
+
+exit 0

@@ -1,0 +1,60 @@
+services:
+  php-laravel:
+    build:
+      context: .
+      dockerfile: php-laravel/Dockerfile
+    volumes:
+      - ../:/workspace
+      - ../project:/var/www/html
+    init: true
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    networks:
+      - caddy_network
+    labels:
+      caddy: ${APP_URL}
+      caddy.handle: /api/*
+      caddy.handle.reverse_proxy: "{{upstreams 80}}"
+      caddy.handle.import: caddy_headers
+      caddy.handle.header.Content-Security-Policy: "\"default-src 'none'; frame-ancestors 'none'; sandbox;\""
+      
+  
+  nginx:
+    depends_on:
+      php-laravel:
+        condition: service_started
+    network_mode: service:php-laravel
+    image: nginx:latest
+    init: true
+    volumes:
+      - ../project:/var/www/html
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/entrypoint.sh:/workspace/entrypoint.sh:ro
+    entrypoint: /workspace/entrypoint.sh
+    restart: unless-stopped
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    restart: unless-stopped
+    volumes:
+        - mailpit_data:/data
+    ports:
+        - 8025:8025
+        - 1025:1025
+    environment:
+        MP_MAX_MESSAGES: 5000
+        MP_DATABASE: /data/mailpit.db
+        MP_SMTP_AUTH_ACCEPT_ANY: 1
+        MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    networks:
+      - caddy_network
+
+volumes:
+  mailpit_data:
+
+networks:
+  caddy_network:
+    external: true
+    name: caddy_network

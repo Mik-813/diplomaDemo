@@ -1,0 +1,53 @@
+{
+  "name": "vite-vue-static",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lintf": "eslint . --fix"
+  },
+  "dependencies": {
+    "@formkit/auto-animate": "^0.9.0",
+    "@tailwindcss/vite": "^4.1.14",
+    "@types/three": "^0.184.0",
+    "@vuepic/vue-datepicker": "^12.1.0",
+    "@vueuse/core": "^14.2.0",
+    "axios": "^1.13.4",
+    "convert-units": "^2.3.4",
+    "export-to-csv": "^1.4.0",
+    "expr-eval": "^2.0.2",
+    "fuse.js": "^7.1.0",
+    "millify": "^6.1.0",
+    "overlayscrollbars": "^2.14.0",
+    "overlayscrollbars-vue": "^0.5.9",
+    "papaparse": "^5.5.3",
+    "tailwindcss": "^4.1.14",
+    "three": "^0.184.0",
+    "v-click-outside": "^3.2.0",
+    "vue": "^3.5.22",
+    "vue-recaptcha-v3": "^2.0.1",
+    "vue-router": "^4.6.0",
+    "vue-sonner": "^2.0.9",
+    "vue3-apexcharts": "^1.10.0"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.4.0",
+    "@types/convert-units": "^2.3.12",
+    "@types/node": "^24.7.2",
+    "@types/papaparse": "^5.5.2",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "eslint": "^9.37.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-vue": "^10.5.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.10",
+    "vue-tsc": "^3.1.1"
+  }
+}

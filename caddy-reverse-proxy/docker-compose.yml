@@ -1,0 +1,25 @@
+services:
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+    environment:
+      - CADDY_DOCKER_CADDYFILE_PATH=/etc/caddy/Caddyfile
+    ports:
+      - "${APP_PORT:-80}:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    networks:
+      - caddy_network
+    restart: unless-stopped
+
+networks:
+  caddy_network:
+    external: false
+    name: caddy_network
+
+volumes:
+  caddy_data: {}
+  caddy_config: {}

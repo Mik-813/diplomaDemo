@@ -4,6 +4,26 @@ set -e
 
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+color() {
+    _color="$1"
+    _text="$2"
+
+    case "$_color" in
+        (red)    code="31" ;;
+        (green)  code="32" ;;
+        (yellow) code="33" ;;
+        (blue)   code="34" ;;
+        (purple) code="35" ;;
+        (cyan)   code="36" ;;
+        (white)  code="37" ;;
+        (black)  code="30" ;;
+        (bold)   code="1"  ;;
+        (reset)  code="0"  ;;
+        (*)      code="0"  ;;
+    esac
+    printf "\033[%sm%s\033[0m" "$code" "$_text"
+}
+
 ensure_exec() {
   for script in "$PROJECT_DIR/caddy-reverse-proxy/runner" \
     "$PROJECT_DIR/fitness-web/runner" \
@@ -50,6 +70,19 @@ dev() {
   (cd caddy-reverse-proxy && ./runner dev)
   (cd fitness-web && ./runner dev)
   (cd fitness-api && ./run)
+
+  APP_URL=$(grep -m 1 '^APP_URL=' .env | cut -d '=' -f2- | tr -d '"' | tr -d "'")
+  APP_PORT=$(grep -m 1 '^APP_PORT=' .env | cut -d '=' -f2- | tr -d '"' | tr -d "'")
+
+  printf "\n\nFrontend:\t" 
+  if [ -n "$APP_PORT" ]; then
+    color cyan "${APP_URL}:${APP_PORT}"
+  else
+    color cyan "${APP_URL}"
+  fi
+  printf "\nEmail service:\t"
+  color cyan "${APP_URL}:8025"
+  printf "\n\n"
 }
 
 ensure_exec
@@ -61,7 +94,5 @@ case "$1" in
   (destroy) destroy;;
   (*) help;;
 esac
-
-printf "\nReady.\n"
 
 exit 0

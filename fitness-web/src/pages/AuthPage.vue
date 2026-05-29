@@ -180,7 +180,7 @@ const authButtonIdx = ref(0)
               :force-label-active="true"
             />
 
-            <div
+            <!-- <div
               class="grid w-full transition-[grid-template-rows] duration-300"
               :class="isLogin ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
             >
@@ -193,7 +193,7 @@ const authButtonIdx = ref(0)
                   Forgot password?
                 </button>
               </div>
-            </div>
+            </div> -->
 
             <div class="transition-transform duration-200">
               <button
